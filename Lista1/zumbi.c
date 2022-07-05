@@ -12,9 +12,9 @@ int main(){
     
     signal(SIGUSR1, intHandler); //DUMMY 10
 
-    signal(SIGUSR2, intHandler); //DUMMY 15
+    signal(SIGUSR2, intHandler); //DUMMY 12
 
-    while(1) {
+    while(1){
 
     }
 
@@ -23,25 +23,17 @@ int main(){
 
 void intHandler(int dummy){
 
-    pid_t pid;
-
     if(dummy == 10){
         if(count == 2){
             exit(0);
         }
         if(count == 1){
-            waitpid(pid, NULL, 0);
             count++;
+            wait(NULL);
         }
         if(count == 0){
             count++;
-            pid = fork();
-            if (pid >= 0) { // fork successful
-                if (pid == 0) { // child - print and exit
-                    sleep(10);
-                    exit(0);
-                }
-            }
+            if(fork() == 0) exit(0);
         }
     }
 
@@ -50,18 +42,12 @@ void intHandler(int dummy){
             exit(0);
         }
         if(count == 1){
-            waitpid(pid, NULL, 0);
             count++;
+            wait(NULL);
         }
         if(count == 0){
             count++;
-            pid = fork();
-            if (pid >= 0) { // fork successful
-                if (pid == 0) { // child - print and exit
-                    sleep(10);
-                    exit(0);
-                }
-            }
-        }  
+            if(fork() == 0) exit(0);
+        }
     }
 }
